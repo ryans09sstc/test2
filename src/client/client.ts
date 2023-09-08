@@ -201,7 +201,7 @@ loader.load(
         // var floor = scene.getObjectByName('floor')
         // floor!.visible = false
         var house = scene.getObjectByName('house')
-        house!.visible = false
+        // house!.visible = false
     },
     (xhr) => {
         console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
