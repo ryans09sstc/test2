@@ -9,7 +9,8 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
-
+// @ts-ignore
+import { addmodel } from './addmodel';
 
 const scene = new THREE.Scene()
 const pickableObjects: THREE.Mesh[] = []
@@ -227,11 +228,10 @@ const aabb = new THREE.Box3();
 const box = new THREE.BoxHelper( group, 0xffff00 );
 scene.add( box );
 
-
 const gui = new GUI()
 const userform = gui.addFolder('Insert Model')
 var loadmodel = { add:function(){ 
-     
+    addmodel()
     objLoader.load(
         "models/" + model1 + ".json",
         (object) => {
@@ -424,4 +424,12 @@ renderer.setAnimationLoop( function () {
 } );
 animate()
 
+
+function openSidebar() {
+    throw new Error('Function not implemented.');
+}
+
+function closeSidebar() {
+    throw new Error('Function not implemented.');
+}
 
