@@ -13,7 +13,7 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { addmodel } from './addmodel';
 import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader.js';
 import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture.js';
-import {DefaultLoadingManager} from 'three';
+import { DefaultLoadingManager } from 'three';
 
 const scene = new THREE.Scene()
 const pickableObjects: THREE.Mesh[] = []
@@ -21,10 +21,10 @@ let intersectedObject: THREE.Object3D | null
 const originalMaterials: { [id: string]: THREE.Material | THREE.Material[] } =
     {}
 const highlightedMaterial = new THREE.MeshBasicMaterial({
-    wireframe: true,
+    // wireframe: true,
     color: 0x00ff00,
 })
-scene.background = new THREE.Color( 0xf2f2f2);
+scene.background = new THREE.Color(0xf2f2f2);
 // scene.add(new THREE.AxesHelper(5))
 const camera = new THREE.PerspectiveCamera(
     100,
@@ -156,336 +156,706 @@ const controls = new OrbitControls(camera, renderer.domElement)
 // controls.maxPolarAngle = Math.PI
 // controls.maxDistance = 4
 // controls.minDistance = 2
-new HDRCubeTextureLoader()
-					.setPath( 'textures/cube/pisaHDR/' )
-					.load( [ 'px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr' ],
-						function ( texture ) {
-                            const loader = new GLTFLoader()
-
-loader.load(
-    'models/scene.gltf',
-    function (gltf) {
-        gltf.scene.traverse(function (child) {
-            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('table_table1_0')) {
-                (child as THREE.Mesh).material = material1
-            }
-            if ((child as THREE.Mesh).isMesh) {
-                const m = child as THREE.Mesh
-                //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
-                switch (m.name) {
-                    
-                    default:
-                        m.castShadow = true
-                        child.receiveShadow = true;
-                        pickableObjects.push(m)
-                        //store reference to original materials for later
-                        originalMaterials[m.name] = (m as THREE.Mesh).material
-                }
-
-            
-            }
-            
-
-        })
-        scene.add(gltf.scene)
-        gltf.animations; // Array<THREE.AnimationClip>
-		gltf.scene; // THREE.Group
-		gltf.scenes; // Array<THREE.Group>
-		gltf.cameras; // Array<THREE.Camera>
-		gltf.asset; // Object
-        gltf.scene.position.x = 3.3;
-        gltf.scene.position.y = 0;
-        gltf.scene.position.z = 0;
-        gltf.scene.scale.x = 1;
-        gltf.scene.scale.y = 1;
-        gltf.scene.scale.z= 1;
-        var table = (scene.getObjectByName("table_table1_0") as THREE.Mesh)
-        
-        table!.material = material1
-        console.log(table)
-
-        // var lightings = scene.getObjectByName('ceiling_lamps')
-        // lightings!.visible = false
-        // var ceiling = scene.getObjectByName('ceiling')
-        // ceiling!.visible = false
-        // var floor = scene.getObjectByName('floor')
-        // floor!.visible = false
-        
-        // house!.visible = false
-    
-    },
-    (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-    },
-    (error) => {
-        console.log(error)
-    }
-)
-                            
 const objLoader = new THREE.ObjectLoader();
 const group = new THREE.Group();
-scene.add( group )
+scene.add(group)
 group.name = "customfixture"
-var model1 = '18R45D'
-var locationx = 0
-var locationy = 0
-var rotationa = 0
-var v1 = new THREE.Vector3(0, 0, 0)
-var v2 = new THREE.Vector3(0, 0, 0)
-var o = new THREE.Vector3(0, 1, 0)
-var center = new THREE.Vector3(0, 0, 0)
-const aabb = new THREE.Box3();
-const box = new THREE.BoxHelper( group, 0xffff00 );
-// scene.add( box );
+new HDRCubeTextureLoader()
+    .setPath('textures/cube/pisaHDR/')
+    .load(['px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr'],
+        function (texture) {
+            const loader = new GLTFLoader()
 
-const gui = new GUI()
-const userform = gui.addFolder('Insert Model')
+            loader.load(
+                'models/scene.gltf',
+                function (gltf) {
+                    gltf.scene.traverse(function (child) {
+                        if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('table_table1_0')) {
+                            (child as THREE.Mesh).material = material1
+                        }
+                        if ((child as THREE.Mesh).isMesh) {
+                            const m = child as THREE.Mesh
+                            //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
+                            switch (m.name) {
 
-document.getElementById("btn1")!.addEventListener("click", load, false);
-document.getElementById("btn2")!.addEventListener("click", load, false);
+                                default:
+                                    m.castShadow = true
+                                    child.receiveShadow = true;
+                                    originalMaterials[m.name] = (m as THREE.Mesh).material
+                            }
 
 
-function load() {
+                        }
+
+
+                    })
+                    scene.add(gltf.scene)
+                    gltf.scene.name = "MainScene"
+                    gltf.animations; // Array<THREE.AnimationClip>
+                    gltf.scene; // THREE.Group
+                    gltf.scenes; // Array<THREE.Group>
+                    gltf.cameras; // Array<THREE.Camera>
+                    gltf.asset; // Object
+                    gltf.scene.position.x = 3.3;
+                    gltf.scene.position.y = 0;
+                    gltf.scene.position.z = 0;
+                    gltf.scene.scale.x = 1;
+                    gltf.scene.scale.y = 1;
+                    gltf.scene.scale.z = 1;
+                    var table = (scene.getObjectByName("table_table1_0") as THREE.Mesh)
+
+                    table!.material = material1
+
+
+                    // var lightings = scene.getObjectByName('ceiling_lamps')
+                    // lightings!.visible = false
+                    // var ceiling = scene.getObjectByName('ceiling')
+                    // ceiling!.visible = false
+                    // var floor = scene.getObjectByName('floor')
+                    // floor!.visible = false
+
+                    // house!.visible = false
+
+                },
+                (xhr) => {
+                    console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+                },
+                (error) => {
+                    console.log(error)
+                }
+            )
+            objLoader.load(
+
+                "models/" + "arrow" + ".json",
+                (object) => {
+                    // (object.children[0] as THREE.Mesh).material = material
+                    object.traverse(function (child) {
+
+                        if ((child as THREE.Mesh).isMesh) {
+                            const m = child as THREE.Mesh
+                            //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
+                            switch (m.name) {
+
+                                default:
+                                    m.castShadow = true
+                                    child.receiveShadow = false;
+                                    pickableObjects.push(m)
+                                    //store reference to original materials for later
+                                    originalMaterials[m.name] = (m as THREE.Mesh).material
+                            }
+                        }
+                    })
+                    scene.add(object)
+                    var group2 = scene.getObjectByName("customfixture")
+                    group2!.add(object)
+                    var obj1 = scene.getObjectByName("arrows")
+                    group2!.position.set(0, 3, 0)
+                    object.scale.set(.1, .1, .1)
+                    object.position.set(v1.x, 0, v1.z)
+                },
+                (xhr) => {
+                    console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+                },
+                (error) => {
+                    console.log(error)
+                }
+            )
+
+
+
+            var model1 = '18R45D'
+            var locationx = 0
+            var locationy = 0
+            var rotationa = 0
+            var v1 = new THREE.Vector3(0, 0, 0)
+            var v2 = new THREE.Vector3(0, 0, 0)
+            var o = new THREE.Vector3(0, 1, 0)
+            var center = new THREE.Vector3(0, 0, 0)
+            const aabb = new THREE.Box3();
+            const box = new THREE.BoxHelper(group, 0xffff00);
+            // scene.add( box );
+            const gui = new GUI()
+            var props = {
+                hideBars: true,
+                depthZ_Fraction: 0.015,
+                barColor: '#FFFFFF',
+                barDirection: 'Vertical'
+            };
+
+            var hideBarsController =
+                gui.add(props, 'hideBars')
+                    .name('Scene Visible?')
+                    .listen();
+            hideBarsController.onChange(
+                function (newValue) {
+                    var mainscene = scene.getObjectByName("MainScene")
+                    mainscene!.visible = props.hideBars
+
+                });
+                var props1 = {
+                    hideBars1: true,
+                    depthZ_Fraction: 0.015,
+                    barColor: '#FFFFFF',
+                    barDirection: 'Vertical'
+                };
     
-        var group2 = scene.getObjectByName("customfixture")
-    var locationx = 0
-    var locationy = 0
-    var rotationa = 0
-    for (var i = group2!.children.length - 1; i >= 0; i--) {
-        group.remove(group2!.children[i]);
-    }
-    let selectElement: HTMLSelectElement = 
-document.getElementById('lstBox1') as HTMLSelectElement;
-
-for (let i = 0; i < selectElement.options.length; i++) {
-  let option: HTMLOptionElement = selectElement.options[i];
-  console.log(option);
-  objLoader.load(
-        
-    "models/" + option.label + ".json",
-    (object) => {
-        // (object.children[0] as THREE.Mesh).material = material
-        object.traverse(function (child) {
-            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body1')) {
-                const textureLoader = new THREE.TextureLoader()
-        const normalMap3 = new THREE.CanvasTexture( new FlakesTexture() );
-                        normalMap3.wrapS = THREE.RepeatWrapping;
-                        normalMap3.wrapT = THREE.RepeatWrapping;
-                        normalMap3.repeat.x = 10;
-                        normalMap3.repeat.y = 6;
-                        normalMap3.anisotropy = 16;
-        let material = new THREE.MeshPhysicalMaterial( {
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1,
-            metalness: 0.9,
-            roughness: 1.0,
-            color: 0x0000ff,
-            normalMap: normalMap3,
-            normalScale: new THREE.Vector2( 0.15, 0.15 )
-        } );
-                (child as THREE.Mesh).material = material
-            }
-            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body2')) {
-                const textureLoader = new THREE.TextureLoader()
-        const normalMap3 = new THREE.CanvasTexture( new FlakesTexture() );
-                        normalMap3.wrapS = THREE.RepeatWrapping;
-                        normalMap3.wrapT = THREE.RepeatWrapping;
-                        normalMap3.repeat.x = 10;
-                        normalMap3.repeat.y = 6;
-                        normalMap3.anisotropy = 16;
-        let material = new THREE.MeshPhysicalMaterial( {
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1,
-            metalness: 0.9,
-            roughness: 1.0,
-            color: 0x0000ff,
-            normalMap: normalMap3,
-            normalScale: new THREE.Vector2( 0.15, 0.15 )
-        } );
-                (child as THREE.Mesh).material = material
-            }
-            if ((child as THREE.Mesh).isMesh) {
-                const m = child as THREE.Mesh
-            //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
-            switch (m.name) {
-                
-                default:
-                    m.castShadow = true
-                    child.receiveShadow = false;
-                    pickableObjects.push(m)
-                    //store reference to original materials for later
-                    originalMaterials[m.name] = (m as THREE.Mesh).material
-            }
-            }
-        })
-        scene.add(object)
-        group.add(object)
-        console.log(scene.getObjectByName(option.label))
-        var obj1 = scene.getObjectByName(option.label)
-        var group1 = scene.getObjectByName("customfixture")
-        group1!.position.set(0,0,0)
-        object.scale.set( .04, .04, .04 )
-        object.position.set(v1.x, 0, v1.z)
-        object.rotation.set( THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa) )
-        locationx = obj1!.userData.X*.04 + locationx
-        locationy = obj1!.userData.Y*.04 + locationy
-        console.log(scene)
-        v2 = new THREE.Vector3(obj1?.userData.X*.04, 0, obj1?.userData.Y*.04)
-        v2.applyAxisAngle(o,THREE.MathUtils.degToRad(rotationa))
-        v1 = v1.add(v2)
-        rotationa = obj1!.userData.A + rotationa
-        aabb.setFromObject( group1! );
-        aabb.getCenter(center)
-        group1!.position.set(-center.x,3,-center.z)
-        box.setFromObject(group1!)
-        
-        
-        
-        
-        
-        
-    },
-    (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-    },
-    (error) => {
-        console.log(error)
-    }
-)
-}
+                var hideBarsController =
+                    gui.add(props1, 'hideBars1')
+                        .name('Arrows Visible?')
+                        .listen();
+                hideBarsController.onChange(
+                    function (newValue) {
+                        var mainscene = scene.getObjectByName("arrows.obj")
+                        mainscene!.visible = props1.hideBars1
     
+                    });
 
-  
+            
+
+            document.addEventListener('click', addmodels, false)
+            // document.getElementById("btn1")!.addEventListener("click", load, false);
+            // document.getElementById("btn2")!.addEventListener("click", load, false);
+
+            function addmodels() {
+                if ((intersects.length > 0) && (intersects[0].object.name !== "remove")) {
+                    intersectedObject = intersects[0].object
+                    var objmodel = intersects[0].object
+                    var modelname = objmodel.userData.Q
+                    load(modelname)
+                    // loadarrow()
+                    console.log(intersects[0].object.name);
+                }
+                if (intersects.length > 0 && intersects[0].object.name =="remove") {
+                    var objmodel = intersects[0].object
+                    var group2 = scene.getObjectByName("customfixture")
+                    console.log(objmodel.name)
+                    var i = group2!.children.length - 1; i >= 0; i--
+                    var obj3 = group2!.children[i]
+                    console.log(group2!.children[i])
+                    console.log(i)
+                    group2!.remove(group2!.children[i])
+                    var arrow = scene.getObjectByName("arrows.obj")
+                    group2!.remove(arrow!)
+                    objLoader.load(
+        
+                        "models/" + "arrow" + ".json",
+                        (object) => {
+                            // (object.children[0] as THREE.Mesh).material = material
+                            object.traverse(function (child) {
+                                if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body1')) {
+                                    const textureLoader = new THREE.TextureLoader()
+                                    const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+                                    normalMap3.wrapS = THREE.RepeatWrapping;
+                                    normalMap3.wrapT = THREE.RepeatWrapping;
+                                    normalMap3.repeat.x = 10;
+                                    normalMap3.repeat.y = 6;
+                                    normalMap3.anisotropy = 16;
+                                    let material = new THREE.MeshPhysicalMaterial({
+                                        clearcoat: 1.0,
+                                        clearcoatRoughness: 0.1,
+                                        metalness: 0.9,
+                                        roughness: 1.0,
+                                        color: 0x0000ff,
+                                        normalMap: normalMap3,
+                                        normalScale: new THREE.Vector2(0.15, 0.15)
+                                    });
+                                    (child as THREE.Mesh).material = material
+                                }
+                                if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body2')) {
+                                    const textureLoader = new THREE.TextureLoader()
+                                    const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+                                    normalMap3.wrapS = THREE.RepeatWrapping;
+                                    normalMap3.wrapT = THREE.RepeatWrapping;
+                                    normalMap3.repeat.x = 10;
+                                    normalMap3.repeat.y = 6;
+                                    normalMap3.anisotropy = 16;
+                                    let material = new THREE.MeshPhysicalMaterial({
+                                        clearcoat: 1.0,
+                                        clearcoatRoughness: 0.1,
+                                        metalness: 0.9,
+                                        roughness: 1.0,
+                                        color: 0x0000ff,
+                                        normalMap: normalMap3,
+                                        normalScale: new THREE.Vector2(0.15, 0.15)
+                                    });
+                                    (child as THREE.Mesh).material = material
+                                }
+                                if ((child as THREE.Mesh).isMesh) {
+                                    const m = child as THREE.Mesh
+                                    //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
+                                    switch (m.name) {
     
-}
-
-var removemodel = { add:function(){ 
-    var groupchild = group.children[0];
-    group.remove(group.children[0]);
-    
-    
-}};
-userform.add(removemodel,'add').name('Remove')
-var topview = { add:function(){ 
-    console.log("clicked") 
-    camera.position.set(0, 4, 0);
-    camera.up.set(0, 1, 0);
-    camera.lookAt(0, 0, 0);
-    controls.target = new THREE.Vector3(0,0,0)
-    
-}};
-    userform.add(topview,'add').name('Top View')
-window.addEventListener('resize', onWindowResize, false)
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight
-        camera.updateProjectionMatrix()
-        renderer.setSize(window.innerWidth, window.innerHeight)
-        render()
-    } 
-							const geometry = new THREE.SphereGeometry( .8, 64, 32 );
-
-							const textureLoader = new THREE.TextureLoader();
-
-							const diffuse = textureLoader.load( 'textures/carbon/Carbon.png' );
-							diffuse.colorSpace = THREE.SRGBColorSpace;
-							diffuse.wrapS = THREE.RepeatWrapping;
-							diffuse.wrapT = THREE.RepeatWrapping;
-							diffuse.repeat.x = 10;
-							diffuse.repeat.y = 10;
-
-							const normalMap = textureLoader.load( 'textures/carbon/Carbon_Normal.png' );
-							normalMap.wrapS = THREE.RepeatWrapping;
-							normalMap.wrapT = THREE.RepeatWrapping;
-							normalMap.repeat.x = 10;
-							normalMap.repeat.y = 10;
-
-							const normalMap2 = textureLoader.load( 'textures/water/Water_1_M_Normal.jpg' );
-                            const normalMap5 = textureLoader.load( 'textures/table1_baseColor.jpg' );
-                            
-							const normalMap3 = new THREE.CanvasTexture( new FlakesTexture() );
-							normalMap3.wrapS = THREE.RepeatWrapping;
-							normalMap3.wrapT = THREE.RepeatWrapping;
-							normalMap3.repeat.x = 10;
-							normalMap3.repeat.y = 6;
-							normalMap3.anisotropy = 16;
-
-							const normalMap4 = textureLoader.load( 'textures/golfball.jpg' );
-
-							const clearcoatNormalMap = textureLoader.load( 'textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png' );
-                            var material1 = new THREE.MeshPhysicalMaterial( {
-                                metalness: 0.0,
-								roughness: 0.5,
-								clearcoat: .5,
-								normalMap: normalMap5,
-                                emissiveMap: normalMap5,
-								clearcoatNormalMap: clearcoatNormalMap,
-
-								// y scale is negated to compensate for normal map handedness.
-								clearcoatNormalScale: new THREE.Vector2( 2.0, - 2.0 )
-                            } );
-							// car paint
-
-							let material = new THREE.MeshPhysicalMaterial( {
-								clearcoat: 1.0,
-								clearcoatRoughness: 0.1,
-								metalness: 0.9,
-								roughness: 0.5,
-								color: 0x0000ff,
-								normalMap: normalMap3,
-								normalScale: new THREE.Vector2( 0.15, 0.15 )
-							} );
-
-							
-
-							// fibers
-
-							material = new THREE.MeshPhysicalMaterial( {
-								roughness: 0.5,
-								clearcoat: 1.0,
-								clearcoatRoughness: 0.1,
-								map: diffuse,
-								normalMap: normalMap
-							} );
-							
-
-							// golf
-
-							material = new THREE.MeshPhysicalMaterial( {
-								metalness: 0.0,
-								roughness: 0.1,
-								clearcoat: 1.0,
-								normalMap: normalMap4,
-								clearcoatNormalMap: clearcoatNormalMap,
-
-								// y scale is negated to compensate for normal map handedness.
-								clearcoatNormalScale: new THREE.Vector2( 2.0, - 2.0 )
-							} );
-							
-
-							// clearcoat + normalmap
-
-							material = new THREE.MeshPhysicalMaterial( {
-								clearcoat: 1.0,
-								metalness: 1.0,
-								color: 0xff0000,
-								normalMap: normalMap2,
-								normalScale: new THREE.Vector2( 0.15, 0.15 ),
-								clearcoatNormalMap: clearcoatNormalMap,
-
-								// y scale is negated to compensate for normal map handedness.
-								clearcoatNormalScale: new THREE.Vector2( 2.0, - 2.0 )
-							} );
-                            
-							
-
-							//
-
-							scene.background = texture;
-							scene.environment = texture;
+                                        default:
+                                            m.castShadow = true
+                                            child.receiveShadow = false;
+                                            pickableObjects.push(m)
+                                            //store reference to original materials for later
+                                            originalMaterials[m.name] = (m as THREE.Mesh).material
+                                    }
+                                }
+                            })
+                            // scene.add(object)
+                            group2!.add(object)
+                            // group2!.position.set(0, 0, 0)
+                            object.scale.set(.1, .1, .1)
+                            v2 = new THREE.Vector3(obj3?.userData.X * .04, 0, -obj3?.userData.Y * .04)
+                            v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
+                            v1 = v1.add(v2)
+                            rotationa = rotationa - obj3?.userData.A
+                            object.position.set(v1.x, 0, v1.z)
+                            object.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa)+135)
+                            // locationx = obj1!.userData.X * .04 + locationx
+                            // locationy = obj1!.userData.Y * .04 + locationy
                             console.log(scene)
-						}
+                            // v2 = new THREE.Vector3(obj1?.userData.X * .04, 0, obj1?.userData.Y * .04)
+                            // v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
+                            // v1 = v1.add(v2)
+                            // rotationa = obj1!.userData.A + rotationa
+                            // aabb.setFromObject(group2!);
+                            // aabb.getCenter(center)
+                            // group2!.position.set(-center.x, 3, -center.z)
+                            // box.setFromObject(group2!)
+                            // console.log(obj1!);
+                            // console.log(obj1!.userData.A);
+                            // console.log(rotationa);
+    
+    
+    
+    
+    
+    
+                        },
+                        (xhr) => {
+                            console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+                        },
+                        (error) => {
+                            console.log(error)
+                        }
+                    )
+                    
+                }
+            }
+            function load(modelname: string | undefined) {
 
-					);
+                var group2 = scene.getObjectByName("customfixture")
+                objLoader.load(
+
+                    "models/" + modelname + ".json",
+                    (object) => {
+                        // (object.children[0] as THREE.Mesh).material = material
+                        object.traverse(function (child) {
+                            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body1')) {
+                                const textureLoader = new THREE.TextureLoader()
+                                const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+                                normalMap3.wrapS = THREE.RepeatWrapping;
+                                normalMap3.wrapT = THREE.RepeatWrapping;
+                                normalMap3.repeat.x = 10;
+                                normalMap3.repeat.y = 6;
+                                normalMap3.anisotropy = 16;
+                                let material = new THREE.MeshPhysicalMaterial({
+                                    clearcoat: 1.0,
+                                    clearcoatRoughness: 0.1,
+                                    metalness: 0.9,
+                                    roughness: 1.0,
+                                    color: 0x0000ff,
+                                    normalMap: normalMap3,
+                                    normalScale: new THREE.Vector2(0.15, 0.15)
+                                });
+                                (child as THREE.Mesh).material = material
+                            }
+                            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body2')) {
+                                const textureLoader = new THREE.TextureLoader()
+                                const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+                                normalMap3.wrapS = THREE.RepeatWrapping;
+                                normalMap3.wrapT = THREE.RepeatWrapping;
+                                normalMap3.repeat.x = 10;
+                                normalMap3.repeat.y = 6;
+                                normalMap3.anisotropy = 16;
+                                let material = new THREE.MeshPhysicalMaterial({
+                                    clearcoat: 1.0,
+                                    clearcoatRoughness: 0.1,
+                                    metalness: 0.9,
+                                    roughness: 1.0,
+                                    color: 0x0000ff,
+                                    normalMap: normalMap3,
+                                    normalScale: new THREE.Vector2(0.15, 0.15)
+                                });
+                                (child as THREE.Mesh).material = material
+                            }
+                            if ((child as THREE.Mesh).isMesh) {
+                                const m = child as THREE.Mesh
+                                //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
+                                switch (m.name) {
+
+                                    default:
+                                        m.castShadow = true
+                                        child.receiveShadow = false;
+                                        // pickableObjects.push(m)
+                                        //store reference to original materials for later
+                                        originalMaterials[m.name] = (m as THREE.Mesh).material
+                                }
+                            }
+                        })
+                        // scene.add(object)
+                        group2!.add(object)
+                        console.log(group2!.getObjectByName(modelname!))
+                        var obj1 = group2!.getObjectByName(modelname!)
+                        group2!.position.set(0, 0, 0)
+                        object.scale.set(.04, .04, .04)
+                        object.position.set(v1.x, 0, v1.z)
+                        object.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa))
+                        locationx = obj1!.userData.X * .04 + locationx
+                        locationy = obj1!.userData.Y * .04 + locationy
+                        console.log(scene)
+                        v2 = new THREE.Vector3(obj1?.userData.X * .04, 0, obj1?.userData.Y * .04)
+                        v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
+                        v1 = v1.add(v2)
+                        rotationa = obj1!.userData.A + rotationa
+                        aabb.setFromObject(group2!);
+                        aabb.getCenter(center)
+                        group2!.position.set(-center.x, 3, -center.z)
+                        box.setFromObject(group2!)
+                        console.log(obj1!);
+                        console.log(obj1!.userData.A);
+                        console.log(rotationa);
+                        var arrow = scene.getObjectByName("arrows.obj")
+                        group2!.remove(arrow!)
+                        objLoader.load(
+        
+                            "models/" + "arrow" + ".json",
+                            (object) => {
+                                // (object.children[0] as THREE.Mesh).material = material
+                                object.traverse(function (child) {
+                                    if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body1')) {
+                                        const textureLoader = new THREE.TextureLoader()
+                                        const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+                                        normalMap3.wrapS = THREE.RepeatWrapping;
+                                        normalMap3.wrapT = THREE.RepeatWrapping;
+                                        normalMap3.repeat.x = 10;
+                                        normalMap3.repeat.y = 6;
+                                        normalMap3.anisotropy = 16;
+                                        let material = new THREE.MeshPhysicalMaterial({
+                                            clearcoat: 1.0,
+                                            clearcoatRoughness: 0.1,
+                                            metalness: 0.9,
+                                            roughness: 1.0,
+                                            color: 0x0000ff,
+                                            normalMap: normalMap3,
+                                            normalScale: new THREE.Vector2(0.15, 0.15)
+                                        });
+                                        (child as THREE.Mesh).material = material
+                                    }
+                                    if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body2')) {
+                                        const textureLoader = new THREE.TextureLoader()
+                                        const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+                                        normalMap3.wrapS = THREE.RepeatWrapping;
+                                        normalMap3.wrapT = THREE.RepeatWrapping;
+                                        normalMap3.repeat.x = 10;
+                                        normalMap3.repeat.y = 6;
+                                        normalMap3.anisotropy = 16;
+                                        let material = new THREE.MeshPhysicalMaterial({
+                                            clearcoat: 1.0,
+                                            clearcoatRoughness: 0.1,
+                                            metalness: 0.9,
+                                            roughness: 1.0,
+                                            color: 0x0000ff,
+                                            normalMap: normalMap3,
+                                            normalScale: new THREE.Vector2(0.15, 0.15)
+                                        });
+                                        (child as THREE.Mesh).material = material
+                                    }
+                                    if ((child as THREE.Mesh).isMesh) {
+                                        const m = child as THREE.Mesh
+                                        //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
+                                        switch (m.name) {
+        
+                                            default:
+                                                m.castShadow = true
+                                                child.receiveShadow = false;
+                                                pickableObjects.push(m)
+                                                //store reference to original materials for later
+                                                originalMaterials[m.name] = (m as THREE.Mesh).material
+                                        }
+                                    }
+                                })
+                                // scene.add(object)
+                                console.log(v1.x, v1.z)
+                                group2!.add(object)
+                                console.log(group2!.getObjectByName("arrows.obj"))
+                                var obj1 = group2!.getObjectByName("arrows.obj")
+                                // group2!.position.set(0, 0, 0)
+                                object.scale.set(.1, .1, .1)
+                                object.position.set(v1.x, 0, v1.z)
+                                object.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa)+135)
+                                // locationx = obj1!.userData.X * .04 + locationx
+                                // locationy = obj1!.userData.Y * .04 + locationy
+                                console.log(scene)
+                                // v2 = new THREE.Vector3(obj1?.userData.X * .04, 0, obj1?.userData.Y * .04)
+                                // v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
+                                // v1 = v1.add(v2)
+                                // rotationa = obj1!.userData.A + rotationa
+                                // aabb.setFromObject(group2!);
+                                // aabb.getCenter(center)
+                                // group2!.position.set(-center.x, 3, -center.z)
+                                // box.setFromObject(group2!)
+                                // console.log(obj1!);
+                                // console.log(obj1!.userData.A);
+                                // console.log(rotationa);
+        
+        
+        
+        
+        
+        
+                            },
+                            (xhr) => {
+                                console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+                            },
+                            (error) => {
+                                console.log(error)
+                            }
+                        )
+
+
+
+
+
+                    },
+                    (xhr) => {
+                        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+                    },
+                    (error) => {
+                        console.log(error)
+                    }
+                )
+                
+            }
+            function loadarrow() {
+
+                var group2 = scene.getObjectByName("customfixture")
+                var arrow = scene.getObjectByName("arrows.obj")
+                console.log(arrow)
+                group2!.remove(arrow!)
+                objLoader.load(
+
+                    "models/" + "arrow" + ".json",
+                    (object) => {
+                        // (object.children[0] as THREE.Mesh).material = material
+                        object.traverse(function (child) {
+                            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body1')) {
+                                const textureLoader = new THREE.TextureLoader()
+                                const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+                                normalMap3.wrapS = THREE.RepeatWrapping;
+                                normalMap3.wrapT = THREE.RepeatWrapping;
+                                normalMap3.repeat.x = 10;
+                                normalMap3.repeat.y = 6;
+                                normalMap3.anisotropy = 16;
+                                let material = new THREE.MeshPhysicalMaterial({
+                                    clearcoat: 1.0,
+                                    clearcoatRoughness: 0.1,
+                                    metalness: 0.9,
+                                    roughness: 1.0,
+                                    color: 0x0000ff,
+                                    normalMap: normalMap3,
+                                    normalScale: new THREE.Vector2(0.15, 0.15)
+                                });
+                                (child as THREE.Mesh).material = material
+                            }
+                            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body2')) {
+                                const textureLoader = new THREE.TextureLoader()
+                                const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+                                normalMap3.wrapS = THREE.RepeatWrapping;
+                                normalMap3.wrapT = THREE.RepeatWrapping;
+                                normalMap3.repeat.x = 10;
+                                normalMap3.repeat.y = 6;
+                                normalMap3.anisotropy = 16;
+                                let material = new THREE.MeshPhysicalMaterial({
+                                    clearcoat: 1.0,
+                                    clearcoatRoughness: 0.1,
+                                    metalness: 0.9,
+                                    roughness: 1.0,
+                                    color: 0x0000ff,
+                                    normalMap: normalMap3,
+                                    normalScale: new THREE.Vector2(0.15, 0.15)
+                                });
+                                (child as THREE.Mesh).material = material
+                            }
+                            if ((child as THREE.Mesh).isMesh) {
+                                const m = child as THREE.Mesh
+                                //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
+                                switch (m.name) {
+
+                                    default:
+                                        m.castShadow = true
+                                        child.receiveShadow = false;
+                                        pickableObjects.push(m)
+                                        //store reference to original materials for later
+                                        originalMaterials[m.name] = (m as THREE.Mesh).material
+                                }
+                            }
+                        })
+                        // scene.add(object)
+                        group2!.add(object)
+                        console.log(group2!.getObjectByName("arrows.obj"))
+                        var obj1 = group2!.getObjectByName("arrows.obj")
+                        // group2!.position.set(0, 0, 0)
+                        object.scale.set(.04, .04, .04)
+                        object.position.set(v1.x, 0, v1.z)
+                        object.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa)+180)
+                        // locationx = obj1!.userData.X * .04 + locationx
+                        // locationy = obj1!.userData.Y * .04 + locationy
+                        console.log(scene)
+                        // v2 = new THREE.Vector3(obj1?.userData.X * .04, 0, obj1?.userData.Y * .04)
+                        // v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
+                        // v1 = v1.add(v2)
+                        // rotationa = obj1!.userData.A + rotationa
+                        // aabb.setFromObject(group2!);
+                        // aabb.getCenter(center)
+                        // group2!.position.set(-center.x, 3, -center.z)
+                        // box.setFromObject(group2!)
+                        // console.log(obj1!);
+                        // console.log(obj1!.userData.A);
+                        // console.log(rotationa);
+
+
+
+
+
+
+                    },
+                    (xhr) => {
+                        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+                    },
+                    (error) => {
+                        console.log(error)
+                    }
+                )
+            }
+
+            
+            
+            var topview = {
+                add: function () {
+                    console.log("clicked")
+                    camera.position.set(0, 6, 0);
+                    camera.up.set(0, 1, 0);
+                    camera.lookAt(0, 0, 0);
+                    controls.target = new THREE.Vector3(0, 0, 0)
+
+                }
+            };
+            gui.add(topview, 'add').name('Top View')
+            window.addEventListener('resize', onWindowResize, false)
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight
+                camera.updateProjectionMatrix()
+                renderer.setSize(window.innerWidth, window.innerHeight)
+                render()
+            }
+            const geometry = new THREE.SphereGeometry(.8, 64, 32);
+
+            const textureLoader = new THREE.TextureLoader();
+
+            const diffuse = textureLoader.load('textures/carbon/Carbon.png');
+            diffuse.colorSpace = THREE.SRGBColorSpace;
+            diffuse.wrapS = THREE.RepeatWrapping;
+            diffuse.wrapT = THREE.RepeatWrapping;
+            diffuse.repeat.x = 10;
+            diffuse.repeat.y = 10;
+
+            const normalMap = textureLoader.load('textures/carbon/Carbon_Normal.png');
+            normalMap.wrapS = THREE.RepeatWrapping;
+            normalMap.wrapT = THREE.RepeatWrapping;
+            normalMap.repeat.x = 10;
+            normalMap.repeat.y = 10;
+
+            const normalMap2 = textureLoader.load('textures/water/Water_1_M_Normal.jpg');
+            const normalMap5 = textureLoader.load('textures/table1_baseColor.jpg');
+
+            const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
+            normalMap3.wrapS = THREE.RepeatWrapping;
+            normalMap3.wrapT = THREE.RepeatWrapping;
+            normalMap3.repeat.x = 10;
+            normalMap3.repeat.y = 6;
+            normalMap3.anisotropy = 16;
+
+            const normalMap4 = textureLoader.load('textures/golfball.jpg');
+
+            const clearcoatNormalMap = textureLoader.load('textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png');
+            var material1 = new THREE.MeshPhysicalMaterial({
+                metalness: 0.0,
+                roughness: 0.5,
+                clearcoat: .5,
+                normalMap: normalMap5,
+                emissiveMap: normalMap5,
+                clearcoatNormalMap: clearcoatNormalMap,
+
+                // y scale is negated to compensate for normal map handedness.
+                clearcoatNormalScale: new THREE.Vector2(2.0, - 2.0)
+            });
+            // car paint
+
+            let material = new THREE.MeshPhysicalMaterial({
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1,
+                metalness: 0.9,
+                roughness: 0.5,
+                color: 0x0000ff,
+                normalMap: normalMap3,
+                normalScale: new THREE.Vector2(0.15, 0.15)
+            });
+
+
+
+            // fibers
+
+            material = new THREE.MeshPhysicalMaterial({
+                roughness: 0.5,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1,
+                map: diffuse,
+                normalMap: normalMap
+            });
+
+
+            // golf
+
+            material = new THREE.MeshPhysicalMaterial({
+                metalness: 0.0,
+                roughness: 0.1,
+                clearcoat: 1.0,
+                normalMap: normalMap4,
+                clearcoatNormalMap: clearcoatNormalMap,
+
+                // y scale is negated to compensate for normal map handedness.
+                clearcoatNormalScale: new THREE.Vector2(2.0, - 2.0)
+            });
+
+
+            // clearcoat + normalmap
+
+            material = new THREE.MeshPhysicalMaterial({
+                clearcoat: 1.0,
+                metalness: 1.0,
+                color: 0xff0000,
+                normalMap: normalMap2,
+                normalScale: new THREE.Vector2(0.15, 0.15),
+                clearcoatNormalMap: clearcoatNormalMap,
+
+                // y scale is negated to compensate for normal map handedness.
+                clearcoatNormalScale: new THREE.Vector2(2.0, - 2.0)
+            });
+
+
+
+            //
+
+
+            scene.environment = texture;
+            console.log(scene)
+        }
+
+    );
 
 
 
@@ -495,12 +865,15 @@ const raycaster = new THREE.Raycaster()
 let intersects: THREE.Intersection[]
 
 const mouse = new THREE.Vector2()
+function onDocumentMouseMovelog(event: MouseEvent) {
+    console.log(event.clientX)
+    console.log(event.clientY)
 
+}
 function onDocumentMouseMove(event: MouseEvent) {
-    mouse.set(
-        (event.clientX / renderer.domElement.clientWidth) * 2 - 1,
-        -(event.clientY / renderer.domElement.clientHeight) * 2 + 1
-    )
+    var rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / (rect.width - rect.left)) * 2 - 1;
+    mouse.y = - ((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
     raycaster.setFromCamera(mouse, camera)
     intersects = raycaster.intersectObjects(pickableObjects, false)
 
@@ -513,15 +886,19 @@ function onDocumentMouseMove(event: MouseEvent) {
     }
     pickableObjects.forEach((o: THREE.Mesh, i) => {
         if (intersectedObject && intersectedObject.name === o.name) {
-            // pickableObjects[i].material = highlightedMaterial
+            pickableObjects[i].material = highlightedMaterial
+
         } else {
             pickableObjects[i].material = originalMaterials[o.name]
         }
     })
 }
+
 document.addEventListener('mousemove', onDocumentMouseMove, false)
+
+// document.addEventListener('mousemove', onDocumentMouseMovelog, false)
 document.body.appendChild(stats.dom)
-document.body.appendChild( VRButton.createButton( renderer ) );
+document.body.appendChild(VRButton.createButton(renderer));
 renderer.xr.enabled = true;
 
 
@@ -539,19 +916,13 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 function render() {
     renderer.render(scene, camera)
 }
-renderer.setAnimationLoop( function () {
+renderer.setAnimationLoop(function () {
 
-	renderer.render( scene, camera );
+    renderer.render(scene, camera);
 
-} );
+});
 animate()
 
 
-function openSidebar() {
-    throw new Error('Function not implemented.');
-}
 
-function closeSidebar() {
-    throw new Error('Function not implemented.');
-}
 
