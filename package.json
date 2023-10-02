@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/dat.gui": "^0.7.10",
+    "@types/jquery": "^3.5.20",
     "@types/three": "^0.155.0",
     "dat.gui": "^0.7.9",
     "three": "^0.155.0",
