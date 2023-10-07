@@ -245,13 +245,15 @@ new HDRCubeTextureLoader()
                             }
                         }
                     })
-                    scene.add(object)
+                    
                     var group2 = scene.getObjectByName("customfixture")
-                    group2!.add(object)
                     var obj1 = scene.getObjectByName("arrows")
                     group2!.position.set(0, 3, 0)
                     object.scale.set(.1, .1, .1)
                     object.position.set(v1.x, 0, v1.z)
+                    object.updateMatrixWorld()
+                    group2!.add(object)
+                    
                 },
                 (xhr) => {
                     console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
@@ -321,117 +323,32 @@ new HDRCubeTextureLoader()
                     intersectedObject = intersects[0].object
                     var objmodel = intersects[0].object
                     var modelname = objmodel.userData.Q
+                    console.log(modelname)
                     load(modelname)
-                    // loadarrow()
-                    console.log(intersects[0].object.name);
                 }
                 if (intersects.length > 0 && intersects[0].object.name =="remove") {
                     var objmodel = intersects[0].object
                     var group2 = scene.getObjectByName("customfixture")
                     console.log(objmodel.name)
-                    var i = group2!.children.length - 1; i >= 0; i--
+                    var i = group2!.children.length; i >= 0; i--
                     var obj3 = group2!.children[i]
                     console.log(group2!.children[i])
                     console.log(i)
-                    group2!.remove(group2!.children[i])
+                    if (i != 0){
+                        group2!.remove(group2!.children[i])
+                    }
+                    
                     var arrow = scene.getObjectByName("arrows.obj")
-                    group2!.remove(arrow!)
-                    objLoader.load(
-        
-                        "models/" + "arrow" + ".json",
-                        (object) => {
-                            // (object.children[0] as THREE.Mesh).material = material
-                            object.traverse(function (child) {
-                                if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body1')) {
-                                    const textureLoader = new THREE.TextureLoader()
-                                    const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
-                                    normalMap3.wrapS = THREE.RepeatWrapping;
-                                    normalMap3.wrapT = THREE.RepeatWrapping;
-                                    normalMap3.repeat.x = 10;
-                                    normalMap3.repeat.y = 6;
-                                    normalMap3.anisotropy = 16;
-                                    let material = new THREE.MeshPhysicalMaterial({
-                                        clearcoat: 1.0,
-                                        clearcoatRoughness: 0.1,
-                                        metalness: 0.9,
-                                        roughness: 1.0,
-                                        color: 0x0000ff,
-                                        normalMap: normalMap3,
-                                        normalScale: new THREE.Vector2(0.15, 0.15)
-                                    });
-                                    (child as THREE.Mesh).material = material
-                                }
-                                if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body2')) {
-                                    const textureLoader = new THREE.TextureLoader()
-                                    const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
-                                    normalMap3.wrapS = THREE.RepeatWrapping;
-                                    normalMap3.wrapT = THREE.RepeatWrapping;
-                                    normalMap3.repeat.x = 10;
-                                    normalMap3.repeat.y = 6;
-                                    normalMap3.anisotropy = 16;
-                                    let material = new THREE.MeshPhysicalMaterial({
-                                        clearcoat: 1.0,
-                                        clearcoatRoughness: 0.1,
-                                        metalness: 0.9,
-                                        roughness: 1.0,
-                                        color: 0x0000ff,
-                                        normalMap: normalMap3,
-                                        normalScale: new THREE.Vector2(0.15, 0.15)
-                                    });
-                                    (child as THREE.Mesh).material = material
-                                }
-                                if ((child as THREE.Mesh).isMesh) {
-                                    const m = child as THREE.Mesh
-                                    //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
-                                    switch (m.name) {
-    
-                                        default:
-                                            m.castShadow = true
-                                            child.receiveShadow = false;
-                                            pickableObjects.push(m)
-                                            //store reference to original materials for later
-                                            originalMaterials[m.name] = (m as THREE.Mesh).material
-                                    }
-                                }
-                            })
-                            // scene.add(object)
-                            group2!.add(object)
-                            // group2!.position.set(0, 0, 0)
-                            object.scale.set(.1, .1, .1)
-                            v2 = new THREE.Vector3(obj3?.userData.X * .04, 0, -obj3?.userData.Y * .04)
+                    v2 = new THREE.Vector3(obj3?.userData.X * .04, 0, -obj3?.userData.Y * .04)
                             v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
                             v1 = v1.add(v2)
                             rotationa = rotationa - obj3?.userData.A
-                            object.position.set(v1.x, 0, v1.z)
-                            object.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa)+135)
-                            // locationx = obj1!.userData.X * .04 + locationx
-                            // locationy = obj1!.userData.Y * .04 + locationy
-                            console.log(scene)
-                            // v2 = new THREE.Vector3(obj1?.userData.X * .04, 0, obj1?.userData.Y * .04)
-                            // v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
-                            // v1 = v1.add(v2)
-                            // rotationa = obj1!.userData.A + rotationa
-                            // aabb.setFromObject(group2!);
-                            // aabb.getCenter(center)
-                            // group2!.position.set(-center.x, 3, -center.z)
-                            // box.setFromObject(group2!)
-                            // console.log(obj1!);
-                            // console.log(obj1!.userData.A);
-                            // console.log(rotationa);
-    
-    
-    
-    
-    
-    
-                        },
-                        (xhr) => {
-                            console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-                        },
-                        (error) => {
-                            console.log(error)
-                        }
-                    )
+                            console.log(arrow)
+                            arrow!.position.set(v1.x, 0, v1.z)
+                            arrow!.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa)+135)
+                            arrow!.updateMatrixWorld()
+                
+                    
                     
                 }
             }
@@ -504,8 +421,12 @@ new HDRCubeTextureLoader()
                         object.scale.set(.04, .04, .04)
                         object.position.set(v1.x, 0, v1.z)
                         object.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa))
+                        object.updateMatrixWorld()
+                        
                         locationx = obj1!.userData.X * .04 + locationx
                         locationy = obj1!.userData.Y * .04 + locationy
+                        
+                        object.updateMatrixWorld()
                         console.log(scene)
                         v2 = new THREE.Vector3(obj1?.userData.X * .04, 0, obj1?.userData.Y * .04)
                         v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
@@ -514,107 +435,16 @@ new HDRCubeTextureLoader()
                         aabb.setFromObject(group2!);
                         aabb.getCenter(center)
                         group2!.position.set(-center.x, 3, -center.z)
+                        group2!.updateMatrixWorld()
                         box.setFromObject(group2!)
                         console.log(obj1!);
                         console.log(obj1!.userData.A);
                         console.log(rotationa);
                         var arrow = scene.getObjectByName("arrows.obj")
-                        group2!.remove(arrow!)
-                        objLoader.load(
-        
-                            "models/" + "arrow" + ".json",
-                            (object) => {
-                                // (object.children[0] as THREE.Mesh).material = material
-                                object.traverse(function (child) {
-                                    if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body1')) {
-                                        const textureLoader = new THREE.TextureLoader()
-                                        const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
-                                        normalMap3.wrapS = THREE.RepeatWrapping;
-                                        normalMap3.wrapT = THREE.RepeatWrapping;
-                                        normalMap3.repeat.x = 10;
-                                        normalMap3.repeat.y = 6;
-                                        normalMap3.anisotropy = 16;
-                                        let material = new THREE.MeshPhysicalMaterial({
-                                            clearcoat: 1.0,
-                                            clearcoatRoughness: 0.1,
-                                            metalness: 0.9,
-                                            roughness: 1.0,
-                                            color: 0x0000ff,
-                                            normalMap: normalMap3,
-                                            normalScale: new THREE.Vector2(0.15, 0.15)
-                                        });
-                                        (child as THREE.Mesh).material = material
-                                    }
-                                    if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body2')) {
-                                        const textureLoader = new THREE.TextureLoader()
-                                        const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
-                                        normalMap3.wrapS = THREE.RepeatWrapping;
-                                        normalMap3.wrapT = THREE.RepeatWrapping;
-                                        normalMap3.repeat.x = 10;
-                                        normalMap3.repeat.y = 6;
-                                        normalMap3.anisotropy = 16;
-                                        let material = new THREE.MeshPhysicalMaterial({
-                                            clearcoat: 1.0,
-                                            clearcoatRoughness: 0.1,
-                                            metalness: 0.9,
-                                            roughness: 1.0,
-                                            color: 0x0000ff,
-                                            normalMap: normalMap3,
-                                            normalScale: new THREE.Vector2(0.15, 0.15)
-                                        });
-                                        (child as THREE.Mesh).material = material
-                                    }
-                                    if ((child as THREE.Mesh).isMesh) {
-                                        const m = child as THREE.Mesh
-                                        //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
-                                        switch (m.name) {
-        
-                                            default:
-                                                m.castShadow = true
-                                                child.receiveShadow = false;
-                                                pickableObjects.push(m)
-                                                //store reference to original materials for later
-                                                originalMaterials[m.name] = (m as THREE.Mesh).material
-                                        }
-                                    }
-                                })
-                                // scene.add(object)
-                                console.log(v1.x, v1.z)
-                                group2!.add(object)
-                                console.log(group2!.getObjectByName("arrows.obj"))
-                                var obj1 = group2!.getObjectByName("arrows.obj")
-                                // group2!.position.set(0, 0, 0)
-                                object.scale.set(.1, .1, .1)
-                                object.position.set(v1.x, 0, v1.z)
-                                object.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa)+135)
-                                // locationx = obj1!.userData.X * .04 + locationx
-                                // locationy = obj1!.userData.Y * .04 + locationy
-                                console.log(scene)
-                                // v2 = new THREE.Vector3(obj1?.userData.X * .04, 0, obj1?.userData.Y * .04)
-                                // v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
-                                // v1 = v1.add(v2)
-                                // rotationa = obj1!.userData.A + rotationa
-                                // aabb.setFromObject(group2!);
-                                // aabb.getCenter(center)
-                                // group2!.position.set(-center.x, 3, -center.z)
-                                // box.setFromObject(group2!)
-                                // console.log(obj1!);
-                                // console.log(obj1!.userData.A);
-                                // console.log(rotationa);
-        
-        
-        
-        
-        
-        
-                            },
-                            (xhr) => {
-                                console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-                            },
-                            (error) => {
-                                console.log(error)
-                            }
-                        )
+                        group2!.updateMatrixWorld()
+                        arrow!.position.set(v1.x, v1.y, v1.z)
+                        arrow!.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa+180))
+                        group2!.updateMatrixWorld()
 
 
 
@@ -630,121 +460,25 @@ new HDRCubeTextureLoader()
                 )
                 
             }
-            function loadarrow() {
-
-                var group2 = scene.getObjectByName("customfixture")
-                var arrow = scene.getObjectByName("arrows.obj")
-                console.log(arrow)
-                group2!.remove(arrow!)
-                objLoader.load(
-
-                    "models/" + "arrow" + ".json",
-                    (object) => {
-                        // (object.children[0] as THREE.Mesh).material = material
-                        object.traverse(function (child) {
-                            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body1')) {
-                                const textureLoader = new THREE.TextureLoader()
-                                const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
-                                normalMap3.wrapS = THREE.RepeatWrapping;
-                                normalMap3.wrapT = THREE.RepeatWrapping;
-                                normalMap3.repeat.x = 10;
-                                normalMap3.repeat.y = 6;
-                                normalMap3.anisotropy = 16;
-                                let material = new THREE.MeshPhysicalMaterial({
-                                    clearcoat: 1.0,
-                                    clearcoatRoughness: 0.1,
-                                    metalness: 0.9,
-                                    roughness: 1.0,
-                                    color: 0x0000ff,
-                                    normalMap: normalMap3,
-                                    normalScale: new THREE.Vector2(0.15, 0.15)
-                                });
-                                (child as THREE.Mesh).material = material
-                            }
-                            if (((child as THREE.Mesh).isMesh) && (child as THREE.Mesh).name.includes('Body2')) {
-                                const textureLoader = new THREE.TextureLoader()
-                                const normalMap3 = new THREE.CanvasTexture(new FlakesTexture());
-                                normalMap3.wrapS = THREE.RepeatWrapping;
-                                normalMap3.wrapT = THREE.RepeatWrapping;
-                                normalMap3.repeat.x = 10;
-                                normalMap3.repeat.y = 6;
-                                normalMap3.anisotropy = 16;
-                                let material = new THREE.MeshPhysicalMaterial({
-                                    clearcoat: 1.0,
-                                    clearcoatRoughness: 0.1,
-                                    metalness: 0.9,
-                                    roughness: 1.0,
-                                    color: 0x0000ff,
-                                    normalMap: normalMap3,
-                                    normalScale: new THREE.Vector2(0.15, 0.15)
-                                });
-                                (child as THREE.Mesh).material = material
-                            }
-                            if ((child as THREE.Mesh).isMesh) {
-                                const m = child as THREE.Mesh
-                                //the sphere and plane will not be mouse picked. THe plane will receive shadows while everything else casts shadows.
-                                switch (m.name) {
-
-                                    default:
-                                        m.castShadow = true
-                                        child.receiveShadow = false;
-                                        pickableObjects.push(m)
-                                        //store reference to original materials for later
-                                        originalMaterials[m.name] = (m as THREE.Mesh).material
-                                }
-                            }
-                        })
-                        // scene.add(object)
-                        group2!.add(object)
-                        console.log(group2!.getObjectByName("arrows.obj"))
-                        var obj1 = group2!.getObjectByName("arrows.obj")
-                        // group2!.position.set(0, 0, 0)
-                        object.scale.set(.04, .04, .04)
-                        object.position.set(v1.x, 0, v1.z)
-                        object.rotation.set(THREE.MathUtils.degToRad(270), 0, THREE.MathUtils.degToRad(rotationa)+180)
-                        // locationx = obj1!.userData.X * .04 + locationx
-                        // locationy = obj1!.userData.Y * .04 + locationy
-                        console.log(scene)
-                        // v2 = new THREE.Vector3(obj1?.userData.X * .04, 0, obj1?.userData.Y * .04)
-                        // v2.applyAxisAngle(o, THREE.MathUtils.degToRad(rotationa))
-                        // v1 = v1.add(v2)
-                        // rotationa = obj1!.userData.A + rotationa
-                        // aabb.setFromObject(group2!);
-                        // aabb.getCenter(center)
-                        // group2!.position.set(-center.x, 3, -center.z)
-                        // box.setFromObject(group2!)
-                        // console.log(obj1!);
-                        // console.log(obj1!.userData.A);
-                        // console.log(rotationa);
-
-
-
-
-
-
-                    },
-                    (xhr) => {
-                        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-                    },
-                    (error) => {
-                        console.log(error)
-                    }
-                )
-            }
+            
 
             
             
             var topview = {
                 add: function () {
-                    console.log("clicked")
                     camera.position.set(0, 6, 0);
                     camera.up.set(0, 1, 0);
                     camera.lookAt(0, 0, 0);
                     controls.target = new THREE.Vector3(0, 0, 0)
+                    props.hideBars = false
+                    var mainscene = scene.getObjectByName("MainScene")
+                    mainscene!.visible = props.hideBars
+                    
 
                 }
             };
             gui.add(topview, 'add').name('Top View')
+            scene.updateMatrixWorld()
             window.addEventListener('resize', onWindowResize, false)
             function onWindowResize() {
                 camera.aspect = window.innerWidth / window.innerHeight
@@ -871,6 +605,7 @@ function onDocumentMouseMovelog(event: MouseEvent) {
 
 }
 function onDocumentMouseMove(event: MouseEvent) {
+    // scene.updateWorldMatrix
     var rect = renderer.domElement.getBoundingClientRect();
     mouse.x = ((event.clientX - rect.left) / (rect.width - rect.left)) * 2 - 1;
     mouse.y = - ((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
@@ -879,8 +614,8 @@ function onDocumentMouseMove(event: MouseEvent) {
 
     if (intersects.length > 0) {
         intersectedObject = intersects[0].object
-        // console.log(intersects[0].object.name)
-        // console.log(intersects[0].object.parent)
+        console.log(intersects[0].object.name)
+        console.log(intersects[0].object.parent)
     } else {
         intersectedObject = null
     }
@@ -922,7 +657,3 @@ renderer.setAnimationLoop(function () {
 
 });
 animate()
-
-
-
-
